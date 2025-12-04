@@ -68,22 +68,26 @@ function App() {
         pageUrl: window.location.href
       };
 
+      // Log data to console for debugging
+      console.log('Tracking visitor data:', visitData);
+      console.log('Sending to webhook:', WEBHOOK_URL);
+
       // Only send if webhook URL is configured
       if (WEBHOOK_URL && WEBHOOK_URL !== 'YOUR_WEBHOOK_URL_HERE') {
-        await fetch(WEBHOOK_URL, {
+        const response = await fetch(WEBHOOK_URL, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-          body: JSON.stringify(visitData),
-          mode: 'no-cors' // Prevents CORS issues, but you won't get response
+          body: new URLSearchParams({ data: JSON.stringify(visitData) }),
+          mode: 'no-cors'
         });
+        console.log('Data sent successfully');
       } else {
-        console.log('Visitor data (configure webhook in src/config.js to send):', visitData);
+        console.log('⚠️ Webhook not configured in src/config.js');
       }
     } catch (error) {
-      // Silently fail - don't show errors to visitor
-      console.error('Tracking error:', error);
+      console.error('❌ Tracking error:', error);
     }
   };
 
