@@ -1,0 +1,127 @@
+/* 
+ * Google Apps Script for receiving visitor data
+ * 
+ * HOW TO SET UP:
+ * 1. Go to https://script.google.com
+ * 2. Click "New Project"
+ * 3. Delete any existing code
+ * 4. Copy and paste this entire code
+ * 5. Click "Deploy" > "New deployment"
+ * 6. Click "Select type" > "Web app"
+ * 7. Description: "Link Tracker Webhook"
+ * 8. Execute as: "Me"
+ * 9. Who has access: "Anyone" (this allows your website to send data)
+ * 10. Click "Deploy"
+ * 11. Copy the "Web app URL" 
+ * 12. Paste it in src/config.js as WEBHOOK_URL
+ * 
+ * This script will automatically create a Google Sheet to store visitor data
+ */
+
+function doPost(e) {
+  try {
+    // Parse the incoming data
+    var data = JSON.parse(e.postData.contents);
+    
+    // Get or create the spreadsheet
+    var ss = getOrCreateSpreadsheet();
+    var sheet = ss.getActiveSheet();
+    
+    // Check if headers exist, if not create them
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        'Timestamp',
+        'Local Time',
+        'Timezone',
+        'Browser',
+        'OS',
+        'Device Type',
+        'Screen Width',
+        'Screen Height',
+        'Language',
+        'Platform',
+        'Referrer',
+        'Page URL',
+        'User Agent'
+      ]);
+      
+      // Format header row
+      var headerRange = sheet.getRange(1, 1, 1, 13);
+      headerRange.setFontWeight('bold');
+      headerRange.setBackground('#667eea');
+      headerRange.setFontColor('#ffffff');
+    }
+    
+    // Append the data
+    sheet.appendRow([
+      data.timestamp || '',
+      data.localTime || '',
+      data.timezone || '',
+      data.browser || '',
+      data.os || '',
+      data.deviceType || '',
+      data.screenWidth || '',
+      data.screenHeight || '',
+      data.language || '',
+      data.platform || '',
+      data.referrer || '',
+      data.pageUrl || '',
+      data.userAgent || ''
+    ]);
+    
+    // Auto-resize columns
+    sheet.autoResizeColumns(1, 13);
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      'status': 'success',
+      'message': 'Data recorded'
+    })).setMimeType(ContentService.MimeType.JSON);
+    
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      'status': 'error',
+      'message': error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function getOrCreateSpreadsheet() {
+  var sheetName = 'Link Tracker Data';
+  var files = DriveApp.getFilesByName(sheetName);
+  
+  if (files.hasNext()) {
+    // Spreadsheet exists, open it
+    var file = files.next();
+    return SpreadsheetApp.open(file);
+  } else {
+    // Create new spreadsheet
+    var ss = SpreadsheetApp.create(sheetName);
+    return ss;
+  }
+}
+
+// Test function to verify the script works
+function testScript() {
+  var testData = {
+    postData: {
+      contents: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        localTime: new Date().toLocaleString(),
+        timezone: 'America/New_York',
+        browser: 'Chrome',
+        os: 'Windows',
+        deviceType: 'Desktop',
+        screenWidth: 1920,
+        screenHeight: 1080,
+        language: 'en-US',
+        platform: 'Win32',
+        referrer: 'Direct',
+        pageUrl: 'https://test.com',
+        userAgent: 'Test User Agent'
+      })
+    }
+  };
+  
+  var result = doPost(testData);
+  Logger.log(result.getContent());
+}
