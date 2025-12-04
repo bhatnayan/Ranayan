@@ -1,19 +1,9 @@
 // Configuration for visitor tracking
-// Replace this URL with your actual webhook endpoint
+export const WEBHOOK_URL = 'https://webhook.site/6ecc60de-a2d2-4ea9-89a6-7d32e5cf296d';
 
-// Option 1: Google Apps Script (Recommended - Free)
-// 1. Go to https://script.google.com
-// 2. Create a new project
-// 3. Copy the code from googleAppsScript.txt (in this project)
-// 4. Deploy as Web App
-// 5. Copy the deployment URL here
+// This is your webhook.site URL - keep the webhook.site tab open to see data in real-time!
+// Data on webhook.site expires after 7 days.
 
-// Option 2: FormSpree (Alternative)
-// 1. Sign up at https://formspree.io
-// 2. Create a new form
-// 3. Copy your form endpoint URL here
-
-export const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbx-8pnQBPh6OJuHQV5CISXZ-mK5nuF93tJSdTdN3gLrrNcrV8DySyU1lCadEqDlQR5i/exec';
-
-// You can also use this simple test webhook to see if it works:
-// https://webhook.site - visit the site and get a unique URL for testing
+// For permanent storage, consider switching to:
+// - FormSpree (https://formspree.io) - Easy, free tier available
+// - Google Apps Script (instructions in googleAppsScript.txt) - More complex setup
