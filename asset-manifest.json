@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Ranayan/static/css/main.e986c61e.css",
+    "main.js": "/Ranayan/static/js/main.4e752e5c.js",
+    "index.html": "/Ranayan/index.html",
+    "main.e986c61e.css.map": "/Ranayan/static/css/main.e986c61e.css.map",
+    "main.4e752e5c.js.map": "/Ranayan/static/js/main.4e752e5c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e986c61e.css",
+    "static/js/main.4e752e5c.js"
+  ]
+}
